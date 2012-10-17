@@ -119,13 +119,14 @@ function ss_list_pages($args = "") {
 		'title_li' => __('Pages'), 'echo' => 1,
 		'authors' => '', 'sort_column' => 'menu_order, post_title',
 		'link_before' => '', 'link_after' => '', 'walker' => '',
+		'current_page' => 0
 	);
 
 	$r = wp_parse_args( $args, $defaults );
 	extract( $r, EXTR_SKIP );
 	
 	$output = '';
-	$current_page = 0;
+	//$current_page = 0;
 
 	// sanitize, mostly to keep spaces out
 	$r['exclude'] = preg_replace('/[^0-9,]/', '', $r['exclude']);
@@ -143,7 +144,7 @@ function ss_list_pages($args = "") {
 			$output .= '<li class="pagenav">' . $r['title_li'] . '<ul>';
 
 		global $wp_query;
-		if ( is_page() || is_attachment() || $wp_query->is_posts_page )
+		if ( !$current_page && (is_page() || is_attachment() || $wp_query->is_posts_page) )
 			$current_page = $wp_query->get_queried_object_id();
 		
 		$output .= walk_page_tree($pages, $r['depth'], $current_page, $r);

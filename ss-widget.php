@@ -30,7 +30,7 @@ class SS_Widget extends WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 		$section_subnavigation = get_section_subnavigation();
-		if(is_page() && $section_subnavigation->_menu != false ) {
+		if($section_subnavigation->_menu != false ) {
 			extract( $args );
 			$title = apply_filters( 'widget_title', $section_subnavigation->_sectionTitle );
 			echo $before_widget;
@@ -53,7 +53,7 @@ class SS_Widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 		?>
-		<p>This widget doesn't require any additional configuration beyond the <a href="options-general.php?page=subnav-options">settings menu</a>.</p>
+		<p>This widget doesn't require any additional configuration beyond the <a href="options-general.php?page=section-subnav">settings menu</a>.</p>
 		<?php
 	}
 

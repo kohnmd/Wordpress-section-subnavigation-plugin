@@ -13,13 +13,13 @@ Author URI: http://www.rhymeswithmilk.com/
 // FIRST THINGS FIRST...
 //*********************************************************************************
 
-global $post;
-global $wp_version;
+global $wp_version, $post;
 
 // Constants
-if(!defined('SS_REQUIRED_WP_VERSION')) {
-    define('SS_REQUIRED_WP_VERSION', '3.0');
-}
+defined( 'SS_REQUIRED_WP_VERSION' )
+    || define( 'SS_REQUIRED_WP_VERSION', '3.0' );
+defined( 'SS_PLUGIN_PATH' )
+	|| define( 'SS_PLUGIN_PATH', dirname( __FILE__ ) );
 
 // Make sure we don't expose any info if called directly
 if ( !function_exists( 'add_action' ) ) {
@@ -33,10 +33,35 @@ if( !version_compare($wp_version, SS_REQUIRED_WP_VERSION, '>=') ) {
 }
 
 
+//*********************************************************************************
+// FRONTEND
+//*********************************************************************************
+
+// include main logic Section_Subnavigation class
+require_once SS_PLUGIN_PATH . '/ss-class.php';
+// include modified Walker_Page class and wp_list_pages function
+require_once SS_PLUGIN_PATH . '/ss-walker.php';
+// include SS_Widget which displays menu on frontend
+require_once SS_PLUGIN_PATH . '/ss-widget.php';
+
+
+// Template function for easy generation of a Section_Subnavigation object.
+function get_section_subnavigation($id = 0) {
+	return new Section_Subnavigation($id);
+}
+
+// Template function that generates new Section_Subnavigation objects and outputs menu.
+function section_subnavigation($id = 0) {
+	$section_subnavigation = new Section_Subnavigation($id);
+	echo $section_subnavigation->_menu;
+}
+
 
 //*********************************************************************************
-// ACTIVATION/INSTALLATION HOOKS
+// ADMIN
 //*********************************************************************************
+
+// Activation/Installation Hooks
 
 // Code to execute when plugin activated
 function ss_plugin_activate() {
@@ -59,42 +84,13 @@ register_uninstall_hook(__FILE__, 'ss_plugin_uninstall');
 
 // Add settings link on plugin page
 function ss_settings_link($links) { 
-  $settings_link = '<a href="options-general.php?page=section-subnav">Settings</a>'; 
-  array_unshift($links, $settings_link); 
-  return $links; 
+	$settings_link = '<a href="options-general.php?page=section-subnav">Settings</a>'; 
+	array_unshift($links, $settings_link);
+	return $links;
 }
-$plugin = plugin_basename(__FILE__); 
-add_filter("plugin_action_links_{$plugin}", "ss_settings_link");
+add_filter("plugin_action_links_" . plugin_basename(__FILE__), "ss_settings_link");
 
-
-//*********************************************************************************
-// FRONTEND
-//*********************************************************************************
-
-// include main logic Section_Subnavigation class
-require_once dirname( __FILE__ ) . '/ss-class.php';
-// include modified Walker_Page class and wp_list_pages function
-require_once dirname( __FILE__ ) . '/ss-walker.php';
-// include SS_Widget which displays menu on frontend
-require_once dirname( __FILE__ ) . '/ss-widget.php';
-
-// Template function for easy generation of a Section_Subnavigation object.
-function get_section_subnavigation($id = 0) {
-	return new Section_Subnavigation($id);
-}
-
-// Template function that generates new Section_Subnavigation objects and outputs menu.
-function section_subnavigation($id = 0) {
-	$section_subnavigation = new Section_Subnavigation($id);
-	echo $section_subnavigation->_menu;
-}
-
-
-
-//*********************************************************************************
-// ADMIN OPTIONS
-//*********************************************************************************
 
 // include script that builds admin options page and handles all logic for it
-require_once dirname( __FILE__ ) . '/ss-admin.php';
+require_once SS_PLUGIN_PATH . '/ss-admin.php';
 
