@@ -92,5 +92,6 @@ add_filter("plugin_action_links_" . plugin_basename(__FILE__), "ss_settings_link
 
 
 // include script that builds admin options page and handles all logic for it
-require_once SS_PLUGIN_PATH . '/ss-admin.php';
+// NOTE: No admin menu currently in use. Uncomment the following line when ready to add admin options.
+//require_once SS_PLUGIN_PATH . '/ss-admin.php';
 
